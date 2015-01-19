@@ -1,0 +1,82 @@
+% 
+% Annual Cognitive Science Conference
+% Sample LaTeX Paper -- Proceedings Format
+% 
+
+% Original : Ashwin Ram (ashwin@cc.gatech.edu)       04/01/1994
+% Modified : Johanna Moore (jmoore@cs.pitt.edu)      03/17/1995
+% Modified : David Noelle (noelle@ucsd.edu)          03/15/1996
+% Modified : Pat Langley (langley@cs.stanford.edu)   01/26/1997
+% Latex2e corrections by Ramin Charles Nakisa        01/28/1997 
+% Modified : Tina Eliassi-Rad (eliassi@cs.wisc.edu)  01/31/1998
+% Modified : Trisha Yannuzzi (trisha@ircs.upenn.edu) 12/28/1999 (in process)
+% Modified : Mary Ellen Foster (M.E.Foster@ed.ac.uk) 12/11/2000
+% Modified : Ken Forbus                              01/23/2004
+% Modified : Eli M. Silk (esilk@pitt.edu)            05/24/2005
+% Modified: Niels Taatgen (taatgen@cmu.edu) 10/24/2006
+
+%% Change ``a4paper'' in the following line to ``letterpaper'' if you are
+%% producing a letter-format document.
+
+\documentclass[10pt,letterpaper]{article}
+
+\usepackage{cogsci}
+\usepackage{bbm,amsmath,amssymb}
+\usepackage{pslatex}
+\usepackage{natbib}
+\usepackage{nicefrac}
+\usepackage{hhline}
+%\usepackage{apacite}
+
+
+\title{Resource-Rational Alternative Neglect}
+ 
+\author{{\large \bf Noah D. Goodman} (ngoodman@stanford.edu), {\large \bf Thomas F. Icard, III} (icard@stanford.edu) \\
+  Departments of Psychology and Philosophy, Stanford University}
+
+\begin{document}
+
+\maketitle
+
+
+\begin{abstract}
+Blah blah..
+
+\textbf{Keywords:} 
+frame problem, causal reasoning, alternative neglect, resource rationality, bounded rationality.
+\end{abstract}
+
+\section{The Frame Problem}
+
+The problem of relevance. Immense knowledge base. Any aspect of an agent's knowledge could be important for any given decision/inference problem.
+
+Resource/bounded rationality goes some way toward addressing this problem, viz. approximate inference, etc. Under-explored but potentially relevant aspect of resource rationality: choosing the right representation/model over which to perform inference.
+
+\section{Graphical Causal Models}
+
+Representation choice is a very general issue (cf. Newell \& Simon on problem solving); here we focus on specific cases of graphical causal models. The idea here is that many variables can play a causal role in determining the value of a given variable, yet resource rationality may motivate neglecting some of these variables.
+
+Some setup of the formal problem. Perhaps the specific example of $A\rightarrow \textbf{B}\leftarrow \underline{C} \leftarrow D$ and whether $D$ should be ignored. 
+
+\section{Hidden Markov Models}
+
+Concrete example. Weather?
+
+\section{Predictive versus Diagnostic Reasoning}
+
+Explain how this viewpoint can be used to explain data. This is a kind of resource-rational (boundedly rational) analysis, showing the sense in which alternative neglect can be resource-rational.
+
+Fernbach et al. (2010) show that alternative neglect is significantly more pronounced in predictive than in diagnostic reasoning. As it happens, if prior probabilities of causes are low (a safe assumption in typical contexts), then accuracy loss resulting from alternative neglect is significantly greater for diagnostic reasoning than for predictive reasoning. This suggests that people do neglect alternative possible causes just when it is (resource-)rational to do so.
+
+\section{Toward Rational Representation Choice}
+
+Dynamic view: Could consider a probabilistic generalization of the ``contradiction hypothesis" of Park \& Sloman (2013), concerning when to ``add'' a new causal variable. 
+
+What can we learn from all of this about the more general problem of representation choice?
+
+\bibliographystyle{apalike}
+
+\bibliography{bayes}
+
+
+\end{document}
