@@ -1,0 +1,115 @@
+var background = 0.05
+
+var aprior = 0.5
+var bprior = 0.5
+
+var alpha = 1
+
+// models:
+var noisyOrWeight = function(vars, weights){
+  if(vars.length==0) {
+    return 1-background
+  } else {
+    var rest = noisyOrWeight(vars.slice(1),weights.slice(1))
+    return (vars[0]?(1-weights[0]):1)*rest
+  }
+}
+
+var dDistFull = function(x, y, z){
+  Enumerate(function(){
+    var a = flip(aprior)
+    var b = flip(bprior)
+    var c = flip(1-noisyOrWeight([a, b], [y, z]))
+    var d = flip(1-noisyOrWeight([a], [x]))
+//     display(d)
+    factor(c?0:-Infinity)
+    return d})}
+
+
+var dDistSub = function(x, y, z){
+  Enumerate(function(){
+    var a = flip(aprior)
+    var c = flip(1-noisyOrWeight([a], [y]))
+    var d = flip(1-noisyOrWeight([a], [x]))
+    factor(c?0:-Infinity)
+    return d})}
+
+
+
+// stuff for computing EUs
+
+////mostFrequent lives in external include util.js:
+
+var EUguess = function(fulldist,approxdist, nSample){
+  var guessDist = Enumerate(function()
+  {
+    //take nSamples samples from approximate dist, then choose most frequent answer.
+    var samples = repeat(nSample, function(){return sample(approxdist,[])})
+//                            display(typeof util.mostFrequent(samples))
+    return util.mostFrequent(samples)
+  })
+  
+  var EU = expectation(
+    Enumerate(
+      function()
+      {
+        var guess = sample(guessDist,[]);
+        var truth = sample(fulldist,[]);
+        return guess == truth;
+      }),
+    function(x){return x?1:0})
+    
+  return EU
+}
+
+///
+
+EUguess(dDistFull(0.5,0.5,0.5), dDistSub(0.5,0.5,0.5), 1)
+
+
+
+
+
+
+
+
+
+
+
+// (define (EU-KL fulldist approxdist)
+//   (sum (map (lambda (f a) (* f (log (/ a f))))
+//             (second fulldist)
+//             (second approxdist))))
+
+
+// (define (EU-diff-guess fulldist approxdist)
+//   (- (EUguess fulldist fulldist)
+//      (EUguess fulldist approxdist)))
+
+// (define (EU-diff-KL fulldist approxdist)
+//   (- (EU-KL fulldist fulldist)
+//      (EU-KL fulldist approxdist)))
+
+// ////////
+
+// ;(define x 1)
+// ;(define y 0.5)
+// ;(define z 0.9)
+
+// (define s (repeat 5
+//                   (lambda ()
+//                     (define x 1);(uniform 0 1))
+//                     (define y 1);(uniform 0 1))
+//                     (define z 1);(uniform 0 1))
+//                     (define td (d-dist-true x y z))
+//                     (define ad (d-dist-nob x y z))
+//                     (list (EU-diff-guess td ad) (EU-diff-KL td ad)))))
+  
+  
+
+// (multiviz 
+//  "guess EU diff: " (mean (map first s))
+//  "KL EU: " (mean (map second s))
+//  )
+
+
