@@ -1,3 +1,10 @@
+/*
+
+ a little webppl model to compute the expected utility of inference using N samples from a sub-model. allows exploration of the tradeoff between samples and model approximation.
+ 
+ run this as something like: webppl jointApprox.wppl --require-js ./util.js
+ */
+
 var background = 0.05
 
 var aprior = 0.5
@@ -62,9 +69,18 @@ var EUguess = function(fulldist,approxdist, nSample){
   return EU
 }
 
-///
+//assume a fixed cost per node-sample
+var cpns = 0.1
+var inferenceCost = function(numNodes, numSamples) {
+  return cpns*numNodes*numSamples
+}
 
-EUguess(dDistFull(0.5,0.5,0.5), dDistSub(0.5,0.5,0.5), 1)
+
+
+///
+var nSample = 15
+EUguess(dDistFull(0.1,0.1,0.1), dDistSub(0.1,0.1,0.1), nSample) -
+                    inferenceCost(4,3,nSample)
 
 
 
