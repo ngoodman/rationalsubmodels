@@ -83,7 +83,7 @@ Given $P(\textbf{X})$ and $P^*(\textbf{X}^*)$, there are at least two kinds of q
   \begin{enumerate}
   \item[2.] How far is $P^*$ from $P$ in information distance, for the variables $\textbf{X}_q$ of interest? That is, what is the Kullback-Leibler divergence between $P$ and $P^*$ with respect to $\textbf{X}_q$?
 \end{enumerate}$$KL(P \;||\; P^*)  =  \sum_{\textbf{x}} P(\textbf{X}_q = \textbf{x} \mid \textbf{X}_{e} = \textbf{v})\; \mbox{log} \; \frac{P(\textbf{X}_q = \textbf{x} \mid \textbf{X}_{e} = \textbf{v})}{P^*(\textbf{X}_q = \textbf{x} \mid \textbf{X}^*_{e} = \textbf{v}^*)}$$
-The first of these captures how well an agent will fare by using the approximate submodel, as compared with the full model, holding fixed a procedure for using this model to choose an action. The second captures how far off the approximate model is from the ``true'' model in its probabilistic predictions. In general we will expect that $KL(P \;||\; P^*) > 0$, and $\mathbb{E}_{\textbf{x}\sim P}\;\mathbb{E}_{A \sim \Psi_{P}}\;U(\textbf{x},A) > \mathbb{E}_{\textbf{x} \sim P}\;\mathbb{E}_{A \sim \Psi_{P^*}}\;U(\textbf{x},A)$. However, in line with other work on resource rationality, assuming the requisite computations using distribution $P$ come with a greater cost than when using $P^*$, this difference in cost may well be worth the difference in accuracy or utility.
+The first of these captures how well an agent will fare by using the approximate submodel, as compared with the full model, holding fixed a procedure for using this model to choose an action. For instance, the agent might use this distribution to compute expected utility, or to \emph{sample} from the model in order to approximate expected utility (see, e.g,. \citealt{Vul2014}). The second question asks how far off the approximate model is from the ``true'' model in its probabilistic predictions. In general we will expect that $KL(P \;||\; P^*) > 0$, and $\mathbb{E}_{\textbf{x}\sim P}\;\mathbb{E}_{A \sim \Psi_{P}}\;U(\textbf{x},A) > \mathbb{E}_{\textbf{x} \sim P}\;\mathbb{E}_{A \sim \Psi_{P^*}}\;U(\textbf{x},A)$. However, in line with other work on resource rationality, assuming the requisite computations using distribution $P$ come with a greater cost than when using $P^*$, this difference in cost may well be worth the difference in accuracy or utility.
 
 Suppose we have a cost function $c: \mathcal{P}\rightarrow\mathbb{R}^+$, assigning a real cost to each approximation $P^* \in \mathcal{P}$. For instance, $c$ may simply charge a constant amount for each variable used in the associated submodel. Given a set $\mathcal{P}$ of approximations, we can then ask for the \emph{resource-optimal} approximation  in either of the above two senses. For instance, with KL-divergence, of interest is the distribution $P^*$ that optimally trades off cost against KL-distance from the true distribution $P$: 
 
@@ -158,7 +158,7 @@ If we now factor in the cost of including more nodes in the approximate HMM, we 
 \includegraphics[scale=0.33]{kl-eigenvalue-6.pdf} \caption{Optimal number of nodes, given a cost of $0.02$ per node, as a function of second eigenvalue $\lambda_2$.} \end{center} 
 \label{kl-eigen1}\end{figure}
 
-\noindent For relatively low values of $\lambda_2$, it is not worth the cost to include more than a single state variable in the model. This is perhaps not surprising, given the low KL-values in Fig. \ref{kl-eigen}2. However, even in models with significantly higher KL-distances in general, it does not pay to include more than one or two additional nodes. Note in particular that, while a model with $\lambda_2=0.8$ is further from the true model than one with $\lambda_2=0.7$, only in the latter case does the difference in KL-value between including two and three nodes merit the cost of including the third node. 
+\noindent For relatively low values of $\lambda_2$, it is not worth the cost to include more than a single state variable in the model. This is perhaps not surprising, given the low KL-values in Fig. \ref{kl-eigen}2. However, even in models with significantly higher KL-distances in general, it does not pay to include more than one or two additional nodes. Note in particular that, while a model with $\lambda_2=0.8$ is further from the true model than one with $\lambda_2=0.7$, only in the latter case does the marginal difference in KL-value between including two and three nodes merit the cost of including the third node. 
 
 As Fig. \ref{kl-eigen1}3 indicates, the optimal number of nodes to include in an HMM is not only finite, but typically quite small.
 
@@ -216,41 +216,48 @@ Suppose in particular we have variables $A,B,C,D$ with weights $\theta_1, \theta
 \noindent Imagine, for instance, a case of social reasoning, in which: \begin{itemize} \item[] $A$: ``Mary has lost her usual gloves'' \item[] $B$: ``Mary has her bicycle with her''  \item[] $C$: ``Mary is going cycling"  \item[] $D$:  ``Mary is wearing cycling gloves'' \end{itemize}
 Observing that Mary is wearing cycling gloves makes it more likely that she is going cycling, and therefore that she has her bike with her. But this is attenuated by the alternative possible cause, that she lost her other gloves. Our question in this case is, how much worse will a reasoner fare by ignoring alternative cause $A$, that is, by using the smaller submodel  in Figure \ref{noisy-or}, on the right?
 
-To assess this question, we can look at both the difference in expected utility and the KL-divergence between using the ``true'' distribution $P$ and the approximate distribution $P^*$, for $B$ given $D=1$. Consider first KL-divergence. 
-
-
-
-
-For the EU calculation, suppose our agent is making a guess based on a single sample from distributions $P$ and $P^*$,\footnote{See, e.g., \citep{Vul2014}. This assumption is more apt in more complicated models, where computing exact estimates would be harder. We consider this kind of rule simply for illustration, and contrast with information distance, which would be more closely aligned with an agent (non-noisily) maximizing expected utility.} 
-%NDG: we should introduce the idea of using a submodel with an approximate inference algorithm earlier. we can there point out that the best submodel may be different depending on the (approximate) inference algorithm used, and set up the one-sample case. here we should first do the full conditional version, then the one-sample version.
-and that utility 1 is achieved for a correct response, 0 for incorrect. Some example calculations are summarized below in Table \ref{table1}. \texttt{We will of course want to curtail this list!}
+To assess this question, we can look at both the difference in expected utility and the KL-divergence between using the ``true'' distribution $P$ and the approximate distribution $P^*$, for $B$ given $D=1$. Table \ref{table1} below presents example KL-values for different settings of model parameters (here and throughout this subsection, we set $\beta = 0.05$).
 
 \begin{table}[h]  \begin{center}
-\begin{tabular}{c | c | c | c | c | c | c}
- $P(C)$ & $P(A)$ & $\theta_1$ & $\theta_2$ & $\theta_3$ & $\Delta_{P,P^*}$ & $KL(P \;\vert\vert\; P^*)$ \\ \hline
- $0.5$ & $0.5$ & $1$ & $1$ & $1$ & $-0.097$ & $0.411$ \\
-  $0.5$ & $0.5$ & $1$ & $0.5$ & $0.9$ & $-0.074$ & $0.324$ \\
-  $0.5$ & $0.5$ &$1$ & $0.5$ & $0.5$ & $-0.087$ & $0.187$ \\
- $0.5$ & $0.5$ & $1$ & $0.9$ & $0.5$ & $-0.096$ & $0.181$ \\
- $0.5$ & $0.5$ & $0.9$ & $0.9$ & $0.9$ & $-0.057$ & $0.179$ \\
- $0.5$ & $0.5$ & $0.9$ & $0.5$ & $0.5$ & $-0.053$ & $0.104$ \\
- $0.5$ & $0.5$ &  $0.9$ & $0.1$ & $0.5$ & $-0.007$ & $0.056$ \\
- $0.5$ & $0.5$ & $0.3$ & $0.5$ & $0.9$ & $0.048$ & $0.019$ \\
- $0.5$ & $0.5$ & $0.5$ & $0.9$ & $0.3$ & $0.007$ & $0.007$ \\
- $0.5$ & $0.5$ & $0.1$ & $0.1$ & $0.1$ & $0.006$ & $0.000$ \\
- $0.3$ & $0.1$ & $1$ & $1$ & $1$ & $-0.073$ & $0.083$ \\
- $0.3$ & $0.1$ & $1$ & $0.5$ & $0.9$ & $-0.054$ & $0.081$ \\
- $0.3$ & $0.1$ & $1$ & $0.9$ & $0.5$ & $-0.051$ & $0.029$ \\
- $0.3$ & $0.1$ &$1$ & $0.5$ & $0.5$ & $-0.045$ & $0.034$ \\
- $0.3$ & $0.1$ & $0.9$ & $0.9$ & $0.9$ & $-0.045$ & $0.042$ \\
- $0.3$ & $0.1$ &  $0.9$ & $0.5$ & $0.5$ & $-0.029$ & $0.022$ \\
- $0.3$ & $0.1$ & $0.9$ & $0.1$ & $0.5$ & $0.011$ & $0.015$
-\end{tabular} \end{center} \caption{EU and KL values, with $\beta = 0.05$. \texttt{(Note: the Church program used here is log base $e$!)}} \label{table1}
-\end{table} \noindent We also calculated the average difference in EU over values of $P(C)$ and $P(A)$ at $0.1$ intervals ($0.1$, $0.2$, etc.), and $0.01$ intervals for $\theta_1,\theta_2,\theta_3$ (thus, over 7 million parameter settings). That average is $0.024$.
+\begin{tabular}{c | c | c | c | c || c}
+ $P(C)$ & $P(A)$ & $\theta_1$ & $\theta_2$ & $\theta_3$ & $KL(P \;\vert\vert\; P^*)$ \\ \hline
+ $0.5$ & $0.5$ & $1$ & $1$ & $1$  & $0.594$ \\
+  $0.5$ & $0.5$ & $1$ & $0.5$ & $0.9$  & $0.467$ \\
+  $0.5$ & $0.5$ &$1$ & $0.5$ & $0.5$  & $0.270$ \\
+ $0.5$ & $0.5$ & $1$ & $0.9$ & $0.5$  & $0.261$ \\
+  $0.3$ & $0.1$ & $1$ & $1$ & $1$ & $0.121$ \\
+ $0.5$ & $0.5$ &  $0.9$ & $0.1$ & $0.5$  & $0.081$ \\
+  $0.3$ & $0.1$ & $0.9$ & $0.1$ & $0.5$ & $0.023$ \\
+ $0.5$ & $0.5$ & $0.1$ & $0.1$ & $0.1$ & $0.000$ 
+\end{tabular} \end{center} \caption{Example KL-values, with $\beta = 0.05$.} \label{table1}
+\end{table}
+We can also calculate the approximate \emph{average} KL-divergence, over values of $P(C)$ and $P(A)$ at $0.1$ intervals ($0.1$, $0.2$, etc.), and $0.01$ intervals for $\theta_1,\theta_2,\theta_3$ (thus, over 7 million parameter settings): for this model, it is $0.060$. Averaging over parameters with $P(A)$ and $P(C)$ fixed at $0.5$ gives a similar value of $0.059$.
 
-Evidently, when making a binary, sample-based decision, using the smaller submodel does not greatly reduce one's success probability. In fact, as shown in Table \ref{table1}, for many parameter settings the agent actually fares better by using the simpler model. Take the first parameter setting, for example. In this case $P(B=1\mid D=1) \approx 0.673$, whereas $P^*(B=1 \mid D=1) \approx 0.953$. The submodel drastically overestimates the probability of $B$ by ignoring the alternative cause, as reflected in the very high KL-divergence. However, insofar as the true probability is significantly above $0.5$, if the agent is going to make a decision by drawing a single sample from this distribution, such overestimation is advantageous, since the agent is more likely to choose the more probable outcome. This advantage is only compounded by the reduction in computational cost resulting from the simpler model.
+Thus, the KL-value is typically not excessive. However, there are instances where it may be, as in the first parameter setting. If confidence in estimation is important, or if more fine-grained decisions are called for, using a submodel in such instances may be detrimental. However, following question 1 from above, we may also consider how detrimental using a submodel will be for action choice in decision problems.
 
-To conclude this small case-study, while in many instances the inaccuracy, as measured by KL-divergence, is not excessive, in some cases it can be. Hence, if confidence in estimation is important, or if more fine-grained decisions are called for, using a submodel in this case may be detrimental. However, even in cases where the KL-divergence is high, the misrepresentation may be to the benefit of the agent, depending on the nature of the decision problem and the choice rule being invoked. We can tentatively conclude from this that alternative neglect---even when it results in less accurate judgments---can be resource rational. 
+For the EU calculation, suppose our agent is making a guess based on a single sample from distributions $P$ and $P^*$,\footnote{This assumption is more apt in more complicated models, where computing exact estimates would be harder. We consider this kind of rule simply for illustration, and contrast with information distance, which would be more closely aligned with an agent (non-noisily) maximizing expected utility.} and that utility 1 is achieved for a correct response, 0 for incorrect. Example calculations are summarized in Table \ref{table2}.
+
+\begin{table}[h]  \begin{center}
+\begin{tabular}{c | c | c | c | c || c}
+ $P(C)$ & $P(A)$ & $\theta_1$ & $\theta_2$ & $\theta_3$ & $\Delta_{P,P*}$ \\ \hline
+ $0.5$ & $0.5$ & $1$ & $1$ & $1$  & $-0.097$ \\
+  $0.5$ & $0.5$ & $1$ & $0.5$ & $0.9$  & $-0.074$ \\
+  $0.5$ & $0.5$ &$1$ & $0.5$ & $0.5$  & $-0.087$ \\
+ $0.5$ & $0.5$ & $1$ & $0.9$ & $0.5$  & $-0.096$ \\
+  $0.3$ & $0.1$ & $1$ & $1$ & $1$ & $-0.073$ \\
+ $0.5$ & $0.5$ &  $0.9$ & $0.1$ & $0.5$  & $-0.007$ \\
+  $0.3$ & $0.1$ & $0.9$ & $0.1$ & $0.5$ & $0.011$ \\
+ $0.5$ & $0.5$ & $0.1$ & $0.1$ & $0.1$ & $0.006$ 
+\end{tabular} \end{center} \caption{Example EU-values, with $\beta = 0.05$.} \label{table2}
+\end{table}
+%NDG: we should introduce the idea of using a submodel with an approximate inference algorithm earlier. we can there point out that the best submodel may be different depending on the (approximate) inference algorithm used, and set up the one-sample case. here we should first do the full conditional version, then the one-sample version.
+%TFI: Okay, I added a bit above. Should we say even more?
+
+ \noindent As with KL, we can also compute the (approximate) average difference in EU, which for this model is $0.024$.
+
+Evidently, when making a binary, sample-based decision, using the smaller submodel does not greatly reduce one's success probability. In fact, as shown in Table \ref{table1}, for many parameter settings the agent actually fares better by using the simpler model. Take the first parameter setting, for example. In this case $P(B=1\mid D=1) \approx 0.673$, whereas $P^*(B=1 \mid D=1) \approx 0.955$. The submodel drastically overestimates the probability of $B$ by ignoring the alternative cause, as reflected in the very high KL-divergence. However, insofar as the true probability is significantly above $0.5$, if the agent is going to make a decision by drawing a single sample from this distribution, such overestimation is advantageous, since the agent is more likely to choose the more probable outcome. This advantage would only be compounded by the reduction in computational cost resulting from the simpler model.
+
+We can tentatively conclude from this small case-study that alternative neglect---even when it results in less accurate judgments---can be resource rational. 
 
 \section{Predictive versus Diagnostic Reasoning}
 
@@ -294,36 +301,27 @@ One of the more robust recent findings in the causal reasoning literature is tha
  \end{tikzpicture} \end{center}
  \caption{Predictive versus Diagnostic Inference} \label{diagnostic}
 \end{figure}
-The left diagram depicts a predictive inference, where effect $B$ is queried given evidence that cause $C$ is active. On the right is a diagnostic inference, where the the causal variable $C$ is queried given evidence $B$. In this simple model, we can fold $P(A)$ and $\theta_{B,A}$ into a single parameter $\theta_2$, so that $A$ effectively has prior probability 1, and the resulting conditional probabilities can be simplified to: 
+The left diagram depicts a predictive inference, where effect $B$ is queried given evidence that cause $C$ is active. On the right is a diagnostic inference, where the causal variable $C$ is queried given evidence $B$. In this simple model, we can fold $P(A)$ and $\theta_{B,A}$ into a single parameter $\theta_2$, so that $A$ effectively has prior probability 1, and the resulting conditional probabilities can be simplified to: 
 $$P(B\mid C) \;= \; \theta_1 + \theta_2 - \theta_1\theta_2$$
 $$P(C \mid B) \;= \; 1- \big(1-P(C)\big)\Big(\theta_2\;/\;\big(P(C)\theta_1 + \theta_2  - P(C)\big)\Big)$$
 The finding in \cite{Fernbach2011} is that subjects routinely ignore variable $A$ in predictive inference tasks, and thereby consistently make low estimates of $P(B\mid C)$. In diagnostic inference tasks, however, subjects show sensitivity to strength and number of alternatives, consequently making more accurate judgments. Indeed, there is a longer reaction time for diagnostic than for predictive inferences, and only in the diagnostic condition is there dependency of reaction time on number of alternatives \citep{Fernbach2010}. \cite{Fernbach2013} verified that this asymmetry between diagnostic and predictive reasoning is robust; in particular, it not due to availability or memory limitations.
 
-In other words, like in the previous example, subjects seem to be reasoning with a submodel, ignoring variable $A$, in the predictive case, but not in the diagnostic case. How detrimental could it be to neglect $A$? Table \ref{predictive} shows the differences in expected utility for various parameter settings---again with a single-sample-based agent---between the EU of using the true distribution and the approximate distribution (ignoring variable $A$), for both the predictive and diagnostic cases. 
-\begin{table}[h]  \begin{center}
-\begin{tabular}{c | c | c | c | c | c}
- $P(C)$ & $P(A)$ & $\theta_1$ & $\theta_2$ & $\Delta_{pred}$ & $\Delta_{diag}$ \\ \hline
- $0.1$ & $0.1$ &  $0.9$ & $0.9$ & $0.007$ & $0.034$ \\
- $0.1$ & $0.1$ &  $0.7$ & $0.7$ & $0.009$ & $0.035$ \\
- $0.1$ & $0.1$ &  $0.5$ & $0.5$ & $0.002$ & $0.035$ \\
- $0.1$ & $0.1$ &  $0.3$ & $0.3$ & $-0.006$ & $0.031$ \\
- $0.1$ & $0.3$ &  $0.3$ & $0.3$ & $-0.013$ & $0.093$ \\
- $0.1$ & $0.3$ &  $0.7$ & $0.7$ & $0.033$ & $0.174$ \\
- $0.1$ & $0.1$ &  $0.3$ & $0.7$ & $-0.001$ & $0.075$ \\
- $0.1$ & $0.1$ &  $0.7$ & $0.3$ & $0.004$ & $-0.001$ \\
- $0.3$ & $0.1$ &  $0.7$ & $0.7$ & $0.009$ & $-0.060$ \\
- $0.3$ & $0.3$ &  $0.9$ & $0.9$ & $0.022$ & $-0.042$ \\
- $0.9$ & $0.9$ &  $0.5$ & $0.5$ & $0.102$ & $-0.049$ \\
- $0.9$ & $0.9$ &  $0.9$ & $0.9$ & $0.074$ & $-0.065$ \\
- $0.1$ & $1.0$ & $0.9$ & $0.3$ & $0.025$ & $0.227$ \\
- $0.1$ & $0.9$ &  $0.7$ & $0.3$ & $0.045$ & $0.216$ \\
- $0.1$ & $1.0$ & $0.9$ & $0.1$ & $0.008$ & $0.045$ \\
-  $0.1$ & $0.5$ &  $0.9$ & $0.1$ & $0.004$ & $0.014$
-\end{tabular} \end{center} \caption{Differences in expected utility between true and approximate distributions, predictive and diagnostic inferences. \texttt{Again, this can be drastically shortened. It also needs to be rewritten without $P(A)$.}} \label{predictive}
-\end{table} 
-In many cases, $\Delta_{pred}$ is indeed smaller than $\Delta_{pred}$, meaning that the agent suffers less in expected utility when using the smaller submodel. However, there are also many cases where $\Delta_{pred}$ is quite large, e.g., $\approx 0.1$, and at any rate greater than $\Delta_{diag}$. Indeed, the average $\Delta_{pred}$ value, over $0.01$ intervals for all parameters, is $0.198$---quite large, and significantly greater than $\Delta_{diag}$, whose average is $0.044$. Moreover, \cite{Fernbach2013} have shown that people exhibit neglect even in these cases where the mistake it rather serious. Thus, if we consider the single-sampling agent, and average over all parameter settings, it would seem that people ignore alternatives in the \emph{altogether wrong} cases.
+In other words, subjects seem to be reasoning with a submodel, ignoring variable $A$, in the predictive case, but not in the diagnostic case. How detrimental could it be to neglect $A$ for these two types of inference. Again, consider first KL-divergence. Without a background bias term (as in the previous example), for the diagnostic case ignoring variable $A$ will lead to the conclusion that $C$ has probability 1, which means the KL-divergence is not even defined. With a positive bias term, we can make the KL-divergence as large as we like, by making the bias smaller. For instance, with $\beta = 0.01$, the average value of $KL(P\;||\;P^*)$ is already $1.740$, extremely high, in the diagnostic case. By contrast, it is only $0.298$ in the predictive case. Assuming general accuracy matters, it would seem reasonable, at least on average, to neglect variables in the predictive rather than the diagnostic cases.
 
-Looking at KL-divergence, however, we see a different picture. In fact, without a background bias term (as in the previous example), for the diagnostic case ignoring variable $A$ will lead to the conclusion that $C$ has probability 1, which means the KL-divergence is not even defined. With a positive bias term, we can make the KL-divergence as large as we like, by making the bias smaller. For instance, with $\beta = 0.01$, the average value of $KL(P\;||\;P^*)$ is already $1.740$ in the diagnostic case. By contrast, it is only $0.298$ in the predictive case. 
+How does this look from the perspective of expected utility, again assuming a single-sample-based agent?  Table \ref{predictive} shows the differences in expected utility for several parameter settings between the EU of using the true distribution and the approximate distribution (ignoring variable $A$), for both the predictive and diagnostic cases. 
+\begin{table}[h]  \begin{center}
+\begin{tabular}{c | c | c || c | c}
+ $P(C)$ & $\theta_1$ & $\theta_2$ & $\Delta_{pred}$ & $\Delta_{diag}$ \\ \hline
+  $0.1$ & $0.3$ & $0.9$ & $1.083$ & $1.345$ \\
+ $0.5$ & $0.9$ &  $0.9$ & $0.176$ & $-0.041$ \\
+ $0.5$ & $0.5$ & $0.1$ & $0.010$ & $-0.144$ \\
+  $0.2$ & $0.3$ & $0.2$ & $-0.034$ & $0.345$ \\
+ $0.1$ & $0.3$ & $0.1$ & $-0.036$ & $0.550$ \\
+
+\end{tabular} \end{center} \caption{Differences in expected utility between the true and approximate distributions, for predictive and diagnostic inferences (with $\beta = 0.05$ for diagnostic cases).} \label{predictive}
+\end{table} 
+In some cases, $\Delta_{pred}$ is indeed smaller than $\Delta_{pred}$, meaning that the agent suffers less in expected utility when using the smaller submodel. However, there are also cases where $\Delta_{pred}$ is quite large, e.g., $\approx 0.1$, even when $\Delta_{diag}$ is small. Indeed, the average $\Delta_{pred}$ value, over $0.01$ intervals for all parameters, is $0.198$---quite large, and significantly greater than $\Delta_{diag}$, whose average is $0.044$. Moreover, \cite{Fernbach2013} have shown that people exhibit neglect even in these cases where the mistake is rather serious. Thus, if we consider the single-sampling agent, and average over all parameter settings, it would seem that people ignore alternatives in the \emph{altogether wrong} cases.
+
 
 If we take resource rationality as a working methodological hypothesis, this would suggest at least two conclusions. First, in simple situations like in Figure \ref{diagnostic}, people may not make decisions based on a single sample, which is after all a strategy that makes more sense in computationally demanding tasks---they may either take more samples, or use a different algorithmic strategy altogether. Relatedly, people may often face decision problems that call for more fine-grained judgments: not just which outcome is more likely, but how much more likely. For such tasks, KL-divergence matters.
 
@@ -335,18 +333,14 @@ Second, the results of \cite{Fernbach2011}, together with the proposed analysis,
 
 Dynamic view: Could consider a probabilistic generalization of the ``contradiction hypothesis" of Park \& Sloman (2013), concerning when to ``add'' a new causal variable. \cite{KlaymanHa}: people go with a hypothesis until it is contradicted by data. Confirmation only adds to it.
 
-Tversky \& Koehler (1994) showed that when alternatives are ``unpacked'' increases its probability. Sloman et al. (2004) showed that if they are unpacked with atypical causes, then probability decreases!
-
-Kahneman \& Tversky (1983) showed people judge cause+effect to be more likely than effect alone. Perhaps draw a single variable at first and (for whatever reason) underestimate; however, they can be made to consider larger causal structures, which may influence their judgment. 
-
 Previous work on ``relevance'' of variables in graphical models \citep{Druzdzel}
-
 
 More general class of approximation strategies: combining with MCMC strategies, etc. \citep{WickMcCallum}
 
 ``The frame problem goes very deep; it goes as deep as the analysis of rationality" \citep{Fodor1987}
 
 %NDG: should do joint optimization of samples and submodel.
+%TFI: Yes!
 
 \bibliographystyle{apalike}
 
