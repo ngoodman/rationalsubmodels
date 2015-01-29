@@ -358,19 +358,33 @@ However, this does not yet say anything about resource-rationality at the level 
 
 \section{Further Questions and Directions}
 
-The notion of \emph{rational submodel} presented here is from a ``god's eye'' point of view, determining which submodel of a larger model an agent ought to use for a given purpose, balancing costs with accuracy. As we have seen, the framework does already shed light on a number of phenomena: it agrees with our pretheoretical intuition that only a few previous time steps should matter in an HMM; it interacts in subtle ways with different assumptions about choice rules, witness the single-sampling agent in the second example; and it retrodicts general patterns observed in human causal reasoning data.
+The \emph{resource-rational submodel} is that submodel of the true, larger model which an agent ought to use for a given purpose, balancing costs with accuracy. 
+As we have seen, this approach to the causal frame problem does already shed light on a number of phenomena: it agrees with our pretheoretical intuition that only a few previous time steps should matter in an HMM; it interacts in subtle ways with different assumptions about choice rules, witness the single-sampling agent in the second example; and it retrodicts general alternative neglect patterns observed in human causal reasoning.
 
-As an approach to the causal frame problem, the claim is that, somehow or other, the mind is able to focus attention on reasonable submodels for the task at hand. Of course, this leaves open a number of questions. Most saliently, how is the mind able to do this online, at inference time?
+The claim we would like to make is that, somehow or other, the mind is able to focus attention on the predicted submodels for the task at hand. 
+Our analysis, however, is from a ``god's eye'' point of view, and leaves open how is the mind able to select the right submodel online, at inference time.
+%
+There is relevant empirical work which might start to provide an process-level explanation of submodel selection. For example, subjects seem to ``add'' a new causal variable when faced with an apparent contradiction \cite{Park}.
+% (see, e.g., the \emph{contradiction hypothesis} of \citealt{Park}). 
+%We might try to understand the (resource-)rational basis of different algorithms for selecting a causal model with which to reason. As with other instances of rational analysis, this could then be used to focus attention on promising hypotheses for how the mind actually achieves this higher-order task. The framework in this paper is an important start on this question, insofar as the target of any such mechanism will be to identify submodels that are rational in exactly our ``god's eye'' sense.
+At the same time, work in AI suggests useful heuristics for similar resource optimization problems \cite[e.g.][]{WickMcCallum}.
 
-There is some empirical work on specific questions of this sort, e.g., when subjects will ``add'' a new causal variable in the face of further evidence (see, e.g., the \emph{contradiction hypothesis} of \citealt{Park}). Continuing with the idea of bounded-resource-rational analysis, we might try to understand the (resource-)rational basis of different algorithms for selecting a causal model with which to reason. As with other instances of rational analysis, this could then be used to focus attention on promising hypotheses for how the mind actually achieves this higher-order task. The framework in this paper is an important start on this question, insofar as the target of any such mechanism will be to identify submodels that are rational in exactly our ``god's eye'' sense.
 
-There are also further ways we might compare causal models with respect to resource-efficiency. We studied mainly optimal number of nodes, from the perspective of KL-divergence, average utility for a sampling agent, and in the last case average utility for an expected utility maximizer. One could also consider other types of submodels, not by eliminating nodes, but, e.g., by cutting links.
+A number of extensions to our analysis suggest themselves. 
+One could consider other types of submodels: e.g., not by eliminating nodes, but by cutting links.
+One could also consider more seriously the interaction of submodel choice with inference algorithm choice. 
+As we hinted at in the previous section, it would be useful to consider what the optimal \emph{combination} of submodel together with number of samples will be for a given model (thus combining the analysis here with that in \citealt{Vul2014}). Assuming smaller submodels will allow for more samples per unit of time (or energy), and given that more samples lead to more accurate predictions with respect to that model, there is a substantive question of what combination is optimal in any case.
 
-Another natural question to consider is what the optimal \emph{combination} of submodel together with number of samples will be for a given model (thus combining the analysis here with that in \citealt{Vul2014}). Assuming smaller submodels will allow for more samples per unit of time (or energy), and given that more samples lead to more accurate predictions with respect to that model, there is a substantive question of what combination is optimal in any case.
+%
+%There are also further ways we might compare causal models with respect to resource-efficiency. We studied mainly optimal number of nodes, from the perspective of KL-divergence, average utility for a sampling agent, and in the last case average utility for an expected utility maximizer. One could also consider other types of submodels, not by eliminating nodes, but, e.g., by cutting links.
+%
+%Another natural question to consider is what the optimal \emph{combination} of submodel together with number of samples will be for a given model (thus combining the analysis here with that in \citealt{Vul2014}). Assuming smaller submodels will allow for more samples per unit of time (or energy), and given that more samples lead to more accurate predictions with respect to that model, there is a substantive question of what combination is optimal in any case.
+%
+%One might also consider the same questions with respect to an agent using some specific algorithmic inference strategy, such as Markov Chain Monte Carlo or belief propagation (see \citealt{Griffiths2014} for discussion of MCMC is resource-rational psychological model, and \citealt{WickMcCallum} for work in AI of a similar spirit on ``query-aware'' MCMC). That is, given an agent that is using a specific inference strategy, what would be the optimal submodel for that strategy. This too can be combined into one optimization question: which model and what use of this strategy (e.g., how long of a burn-in) together give the best results?
 
-One might also consider the same questions with respect to an agent using some specific algorithmic inference strategy, such as Markov Chain Monte Carlo or belief propagation (see \citealt{Griffiths2014} for discussion of MCMC is resource-rational psychological model, and \citealt{WickMcCallum} for work in AI of a similar spirit on ``query-aware'' MCMC). That is, given an agent that is using a specific inference strategy, what would be the optimal submodel for that strategy. This too can be combined into one optimization question: which model and what use of this strategy (e.g., how long of a burn-in) together give the best results?
-
-To repeat, the precise level of grain at which the mind does efficiently solve this problem remains an open question. But we hope to have made some progress toward an answer to this question. We believe the question is central to  human reasoning. As Fodor remarked, ``The frame problem goes very deep; it goes as deep as the analysis of rationality" \citeyearpar{Fodor1987}.
+%To repeat, the precise level of grain at which the mind does efficiently solve this problem remains an open question. 
+While many questions remain open, we hope to have made some progress toward illuminating the solution to the causal frame problem. 
+We believe the question is central to human reasoning. As Fodor remarked, ``The frame problem goes very deep; it goes as deep as the analysis of rationality" \citeyearpar{Fodor1987}.
 
 %NDG: should do joint optimization of samples and submodel.
 %TFI: Yes!
