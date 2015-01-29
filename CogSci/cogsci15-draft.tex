@@ -165,8 +165,8 @@ As Fig. \ref{kl-eigen1}3 indicates, the optimal number of nodes to include in an
 
 \section{Neglecting Alternative Causes}
 
-We next consider a simple causal model under a so called Noisy-Or parameterization \citep{Cheng}. Suppose we have binary causal variables $\textbf{X}$, taking on values 0 or 1, and conditional probabilities given in terms of weights $\theta_{Y,X}$ codifying the influence of parent $Y$ on a variable $X$---in particular $\theta_{Y,X}$ gives the probability of $Y$ causing $X$ when $Y$ is active ---and a ``background bias'' parameter $\beta$: $$P\big(X\mid \textbf{pa}(X)\big) \quad = \quad 1-\Big((1-\beta)\prod_{Y \in \textbf{pa}(X)} (1-\theta_{Y,X})^Y\Big)$$
-This model has the convenient property that, deleting nodes from the graph still leaves us with a well-defined distribution. Hence the family of sub-models is immediate from the full model (without having to introduce proxy uniform distributions as in previous example).
+We next consider a simple causal model under a so called Noisy-Or parameterization \citep{Cheng}, in which each cause has independent causal power to bring about the effect. Suppose we have binary causal variables $\textbf{X}$, taking on values 0 or 1, and conditional probabilities given in terms of weights $\theta_{Y,X}$ codifying the influence of parent $Y$ on a variable $X$---in particular $\theta_{Y,X}$ gives the probability of $Y$ causing $X$ when $Y$ is active---and a ``background bias'' parameter $\beta$: $$P\big(X\mid \textbf{pa}(X)\big) \quad = \quad 1-\Big((1-\beta)\prod_{Y \in \textbf{pa}(X)} (1-\theta_{Y,X})^Y\Big)$$
+This model has the convenient property that deleting nodes from the graph still leaves us with a well-defined distribution. Hence the family of sub-models is immediate from the full model (without having to introduce a proxy uniform distribution as in the previous example).
 
 Suppose in particular we have variables $A,B,C,D$ with weights $\theta_1, \theta_2$, and $\theta_3$, as depicted on the left in Figure \ref{noisy-or}.
 \begin{figure}[h] 
@@ -193,7 +193,7 @@ Suppose in particular we have variables $A,B,C,D$ with weights $\theta_1, \theta
   
   \node (i1) at (1.5,.6) {$\theta_3$};
   
- \end{tikzpicture} \hspace{0.7in}
+ \end{tikzpicture} \hspace{0.4in}
    \begin{tikzpicture}
   
   \node (s0) at (.5,1.25) [circle,draw=black] {$C$};
@@ -211,11 +211,22 @@ Suppose in particular we have variables $A,B,C,D$ with weights $\theta_1, \theta
   \node (i1) at (.92,.7) {$\theta_2$};
   
  \end{tikzpicture}
+ 
+%% \hspace{0.1in}
+%\begin{minipage}[c]{0.5in}
+% \begin{itemize} 
+%  \setlength\itemsep{1pt}
+%\item[] $A$: ``Mary has lost her usual gloves'' \item[] $B$: ``Mary has her bicycle with her''  \item[] $C$: ``Mary is going cycling"  \item[] $D$:  ``Mary is wearing cycling gloves'' \end{itemize}
+%\end{minipage}
+ 
 \end{center} \caption{Full Model versus Partial Submodel} \label{noisy-or}
 \end{figure} 
 
-\noindent Imagine, for instance, a case of social reasoning, in which: \begin{itemize} \item[] $A$: ``Mary has lost her usual gloves'' \item[] $B$: ``Mary has her bicycle with her''  \item[] $C$: ``Mary is going cycling"  \item[] $D$:  ``Mary is wearing cycling gloves'' \end{itemize}
-Observing that Mary is wearing cycling gloves makes it more likely that she is going cycling, and therefore that she has her bike with her. But this is attenuated by the alternative possible cause, that she lost her other gloves. Our question in this case is, how much worse will a reasoner fare by ignoring alternative cause $A$, that is, by using the smaller submodel  in Figure \ref{noisy-or}, on the right?
+\noindent Imagine, for instance, a case of social reasoning in which these variables correspond to: 
+\begin{itemize} 
+  \setlength\itemsep{1pt}
+\item[] $A$: ``Mary has lost her usual gloves'' \item[] $B$: ``Mary has her bicycle with her''  \item[] $C$: ``Mary is going cycling"  \item[] $D$:  ``Mary is wearing cycling gloves'' \end{itemize}
+Observing that Mary is wearing cycling gloves makes it more likely that she is going cycling, and therefore that she has her bike with her. But this is attenuated by the alternative possible cause, that she lost her other gloves. Our question in this case is, how much worse will a reasoner fare by ignoring alternative cause $A$ (that Mary has lost her gloves), that is, by using the smaller submodel  in Figure \ref{noisy-or}, on the right?
 
 To assess this question, we can look at both the difference in expected utility and the KL-divergence between using the ``true'' distribution $P$ and the approximate distribution $P^*$, for $B$ given $D=1$. Table \ref{table1} below presents example KL-values for different settings of model parameters (here and throughout this subsection, we set $\beta = 0.05$).
 
@@ -233,11 +244,12 @@ To assess this question, we can look at both the difference in expected utility 
 \end{tabular} \end{center} \caption{Example KL-values, with $\beta = 0.05$.} \label{table1}
 \end{table}
 Table \ref{table1} in fact shows settings near the higher end. We can also calculate the approximate \emph{average} KL-divergence, over values of $P(C)$ and $P(A)$ at $0.1$ intervals ($0.1$, $0.2$, etc.), and $0.01$ intervals for $\theta_1,\theta_2,\theta_3$ (thus, over 7 million parameter settings): for this model, it is $0.060$. Averaging over parameters with $P(A)$ and $P(C)$ fixed at $0.5$ gives a similar value of $0.059$.
-Thus, the KL-value is typically much lower than the higher values in Table \ref{table1}. Nonetheless, if confidence in estimation is important, or if more fine-grained decisions are called for, using a submodel in this case may be detrimental. 
+Thus, the KL-value is typically well under one-tenth of a bit of information lost.
+Nonetheless, if confidence in estimation is important, or if very fine-grained decisions are called for, using the submodel may be detrimental in this case. 
 
 However, following question 1 from above, we may also consider how detrimental using a submodel will be for action choice in specific decision problems.
-For the EU calculation, suppose our agent is making a guess based on a single sample from distributions $P$ and $P^*$,\footnote{This assumption is more apt in more complicated models, where computing exact estimates would be harder. We consider this kind of rule simply for illustration, and contrast with information distance, which would be more closely aligned with an agent (non-noisily) maximizing expected utility across decision problems.\label{fn}} and that utility 1 is achieved for a correct response, 0 for incorrect. Example calculations are summarized in Table \ref{table2}.
-
+For the EU calculation, suppose our agent is making a guess based on a single sample from either distribution $P$ or $P^*$,\footnote{This assumption is more apt in more complicated models, where computing exact estimates would be harder. We consider this kind of rule simply for illustration, and contrast with information distance, which would be more closely aligned with an agent (non-noisily) maximizing expected utility across decision problems.\label{fn}} and that utility 1 is achieved for a correct response, 0 for incorrect. Example calculations are summarized in Table \ref{table2}.
+%
 \begin{table}[h]  \begin{center}
 \begin{tabular}{c | c | c | c | c || c}
  $P(C)$ & $P(A)$ & $\theta_1$ & $\theta_2$ & $\theta_3$ & $\Delta_{P,P*}$ \\ \hline
@@ -251,14 +263,12 @@ For the EU calculation, suppose our agent is making a guess based on a single sa
  $0.5$ & $0.5$ & $0.1$ & $0.1$ & $0.1$ & $0.006$ 
 \end{tabular} \end{center} \caption{Example EU-values, with $\beta = 0.05$.} \label{table2}
 \end{table}
-%NDG: we should introduce the idea of using a submodel with an approximate inference algorithm earlier. we can there point out that the best submodel may be different depending on the (approximate) inference algorithm used, and set up the one-sample case. here we should first do the full conditional version, then the one-sample version.
-%TFI: Okay, I added a bit above. Should we say even more?
+%
+As with KL, we can also compute the (approximate) average difference in EU, which for this model is $0.024$. That is, on average over all parameter settings, a sampling agent will only suffer about $\frac{1}{50}$ of a utile by using the simpler submodel.
 
- \noindent As with KL, we can also compute the (approximate) average difference in EU, which for this model is $0.024$. That is, on average over all parameter settings, a sampling agent will only suffer about $\frac{1}{50}$ of a utile by using the simpler submodel.
+Evidently, when making a binary, sample-based decision, using the smaller submodel does not greatly reduce one's success probability. In fact, as shown in Table \ref{table1}, for many parameter settings the agent actually fares better by using the simpler model ($\Delta_{P,P*}<0$). Take the first parameter setting, for example. In this case $P(B=1\mid D=1) \approx 0.673$, whereas $P^*(B=1 \mid D=1) \approx 0.955$. The submodel drastically overestimates the probability of $B$ by ignoring the alternative cause, as reflected in the very high KL-value in Table \ref{table1}. However, insofar as the true probability is significantly above $0.5$, if the subject is going to make a decision by drawing a single sample from this distribution, such overestimation turns out to be advantageous, since the subject is more likely to choose the more probable outcome. Such advantages would only be compounded by the reduction in computational cost resulting from the simpler model.
 
-Evidently, when making a binary, sample-based decision, using the smaller submodel does not greatly reduce one's success probability. In fact, as shown in Table \ref{table1}, for many parameter settings the agent actually fares better by using the simpler model. Take the first parameter setting, for example. In this case $P(B=1\mid D=1) \approx 0.673$, whereas $P^*(B=1 \mid D=1) \approx 0.955$. The submodel drastically overestimates the probability of $B$ by ignoring the alternative cause, as reflected in the very high KL-value. However, insofar as the true probability is significantly above $0.5$, if the subject is going to make a decision by drawing a single sample from this distribution, such overestimation turns out to be advantageous, since the subject is more likely to choose the more probable outcome. Such advantages would only be compounded by the reduction in computational cost resulting from the simpler model.
-
-We can tentatively conclude from this small case-study that alternative neglect---even when it results in less accurate judgments, which it certainly does---can be resource-rational. 
+We can tentatively conclude from this small case-study that alternative neglect---even when it results in less accurate judgments, which it certainly does---can still be a very reasonable, indeed resource-rational, strategy. 
 
 \section{Predictive versus Diagnostic Reasoning}
 
