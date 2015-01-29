@@ -85,16 +85,18 @@ In general we will expect that $KL(P \;||\; P^*) > 0$, and
 $\Delta_{P,P^*}>0$, indicating that the full model yields more accurate results. However, in line with other work on resource rationality, assuming the requisite computations using distribution $P$ come with a greater cost than when using $P^*$, this difference in cost may well be worth the difference in accuracy or utility.
 
 Suppose we have a cost function $c: \mathcal{P}\rightarrow\mathbb{R}^+$, assigning a real cost to each approximation $P^* \in \mathcal{P}$. For instance, $c$ may simply charge a constant amount for each variable used in the associated submodel, or may be proportional to a graph property such as tree width of the corresponding graphical model. Given a set $\mathcal{P}$ of approximations, we can then ask for the \emph{resource-optimal} approximation  in either of the above two senses. For instance, with KL-divergence the distribution of interest is $\tilde{P}$ that optimally trades off cost against KL-distance from the true distribution $P$: 
-
+%
 \begin{equation} \tilde{P} \;\;= \;\; \underset{P^*\in\mathcal{P}}{\textnormal{argmin}} \; KL(P\;||\;P^*) + c(P^*)\;.\label{optimal}\end{equation}
-
+%
+Notice the immediate result that any node $X$ that is screened-off from $\textbf{X}_q$ by $\textbf{X}_e$ should be eliminated: doing so will not reduce the KL, but will improve the efficiency of inference.
 
 In what follows we illustrate these ideas with three examples using familiar graphical models. The first example, of an HMM, demonstrates an extreme case of the frame problem in which the initial model is infinite. In this case we show that the resource-optimal submodel is not only finite, but often quite small, and in many instances includes just a single node. The second example, of a causal Bayes net, shows that under a sampling scheme for decision making, the submodel actually outperforms the ``ideal'' full model in many cases, even without taking costs into account. Finally, the third example, also involving small Bayes nets, reveals that certain kinds of inferences may be subject to greater information loss resulting from resource-rational neglect than others. Recent empirical literature shows that people respect this difference, suggesting that there may indeed be an element of resource rationality in alternative neglect behavior.
 
-\red{
-long:another point: it would be worth pointing out, maybe early on in the paper, the transparent case where you can ignore nodes downstream from all evidence and queries. e.g., if my graphical model is A -> B -> C and I'm interested in P(A | B), i can ignore C.
-andreas: more generally, anything that's screened off by evidence. for a markov model equivalent of the hmm prediction example, this would let you ignore everything but the last observation. then, one could say that one would like to do something similar for the hmm, but there things can only be approximately be ignored
-}
+%\red{
+%long:another point: it would be worth pointing out, maybe early on in the paper, the transparent case where you can ignore nodes downstream from all evidence and queries. e.g., if my graphical model is A -> B -> C and I'm interested in P(A | B), i can ignore C.
+%andreas: more generally, anything that's screened off by evidence. for a markov model equivalent of the hmm prediction example, this would let you ignore everything but the last observation. then, one could say that one would like to do something similar for the hmm, but there things can only be approximately be ignored
+%}
+
 \section{Hidden Markov Models}
 
 A Hidden Markov Model is given by a time-labeled sequence of state variables $\dots,X_{-1},X_{0},X_1,\dots$, %\red{NDG: i think we need to number these the other way, to make them go back to infinity?} 
