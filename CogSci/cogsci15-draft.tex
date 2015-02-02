@@ -70,7 +70,7 @@ In this largely programmatic paper we offer a framework for addressing the causa
 
 \section{Resource-Rational Submodels}
 
-Let $P(\textbf{X})$ be a joint probability distribution over random variables $\textbf{X} = X_1,X_2,\dots$, and define a \emph{query} to be a partition $\langle \textbf{X}_q;\textbf{X}_l;\textbf{X}_e\rangle$ of \textbf{X} into \emph{query variables}, \emph{latent variables}, and \emph{evidence variables}, respectively. A typical query task is to find values of $\textbf{X}_q$ that maximize the conditional probability $P(\textbf{X}_q\mid \textbf{X}_e = \textbf{v})$, marginalizing over values of $\textbf{X}_l$. Clearly, the difficulty of this and related tasks scales with the number of variables. We will be interested in smaller models with fewer variables: a sublist $\textbf{X}^*$ of $\textbf{X}$ with associated distribution $P^*(\textbf{X}^*)$, and associated partition $\langle \textbf{X}_q;\textbf{X}_l^*;\textbf{X}_e^*\rangle$, so that only latent and evidence variables are ignored. 
+Let $P(\textbf{X})$ be a joint probability distribution over random variables $\textbf{X} = X_1,X_2,\dots$, and define a \emph{query} to be a partition $\langle \textbf{X}_q;\textbf{X}_l;\textbf{X}_e\rangle$ of \textbf{X} into \emph{query variables}, \emph{latent variables}, and \emph{evidence variables}, respectively. A typical query task is to find values of $\textbf{X}_q$ that maximize the conditional probability $P(\textbf{X}_q\mid \textbf{X}_e = \textbf{v})$, marginalizing over $\textbf{X}_l$. Clearly, the difficulty of this and related tasks scales with the number of variables. We will be interested in smaller models with fewer variables: a sublist $\textbf{X}^*$ of $\textbf{X}$ with associated distribution $P^*(\textbf{X}^*)$, and partition $\langle \textbf{X}_q;\textbf{X}_l^*;\textbf{X}_e^*\rangle$, so that only latent and evidence variables are ignored. 
 The intention is for $P^{*}$ to be close in structure to $P$ but without the neglected variables.
 In each of the cases considered here (HMMs and Noisy-Or Bayes nets), there will be a canonical way of choosing $P^*$ given $\textbf{X}^*$.
 
@@ -78,19 +78,19 @@ Given $P(\textbf{X})$ and $P^*(\textbf{X}^*)$, there are at least two kinds of q
   \item Given a decision problem with action space $\mathcal{A}$ and utility function $U:\textbf{X}_q\times \mathcal{A} \rightarrow\mathbb{R}$, and assuming fixed a (stochastic) choice rule $\Psi_Q$ taking a distribution $Q$ over $\textbf{X}_q$ to a distribution on actions, what are the respective expected utilities of using $P$ and $P^*$ under (assumed ``true'') distribution $P$? That is, how great is the following difference $\Delta_{P,P^*}$? \end{enumerate}
   $$\Delta_{P,P^*} \;\; = \;\; \mathbb{E}_{\textbf{x}\sim P}\;\mathbb{E}_{A \sim \Psi_{P}}\;U(\textbf{x},A) \,-\, \mathbb{E}_{\textbf{x} \sim P}\;\mathbb{E}_{A \sim \Psi_{P^*}}\;U(\textbf{x},A)$$
   \begin{enumerate}
-  \item[2.] How far is $P^*$ from $P$ in information distance, for the variables $\textbf{X}_q$ of interest? That is, what is the Kullback-Leibler divergence between $P$ and $P^*$ with respect to $\textbf{X}_q$?
+  \item[2.] How far is $P^*$ from $P$ in information distance, for the variables $\textbf{X}_q$ of interest? That is, what is the Kullback-Leibler (KL) divergence between $P$ and $P^*$ with respect to $\textbf{X}_q$?
 \end{enumerate}$$KL(P \;||\; P^*)  =  \sum_{\textbf{x}} P(\textbf{X}_q = \textbf{x} \mid \textbf{X}_{e} = \textbf{v})\; \mbox{log} \; \frac{P(\textbf{X}_q = \textbf{x} \mid \textbf{X}_{e} = \textbf{v})}{P^*(\textbf{X}_q = \textbf{x} \mid \textbf{X}^*_{e} = \textbf{v}^*)}$$
 In general we will expect that $KL(P \;||\; P^*) > 0$, and 
 %$\mathbb{E}_{\textbf{x}\sim P}\;\mathbb{E}_{A \sim \Psi_{P}}\;U(\textbf{x},A) > \mathbb{E}_{\textbf{x} \sim P}\;\mathbb{E}_{A \sim \Psi_{P^*}}\;U(\textbf{x},A)$
 $\Delta_{P,P^*}>0$, indicating that the full model yields more accurate results. However, in line with other work on resource rationality, assuming the requisite computations using distribution $P$ come with a greater cost than when using $P^*$, this difference in cost may well be worth the difference in accuracy or utility.
 
-Suppose we have a cost function $c: \mathcal{P}\rightarrow\mathbb{R}^+$, assigning a real cost to each approximation $P^* \in \mathcal{P}$. For instance, $c$ may simply charge a constant amount for each variable used in the associated submodel, or may be proportional to a graph property such as tree width of the corresponding graphical model. Given a set $\mathcal{P}$ of approximations, we can then ask for the \emph{resource-optimal} approximation  in either of the above two senses. For instance, with KL-divergence the distribution of interest is $\tilde{P}$ that optimally trades off cost against KL-distance from the true distribution $P$: 
+Suppose we have a cost function $c: \mathcal{P}\rightarrow\mathbb{R}^+$, assigning a real cost to each approximation $P^* \in \mathcal{P}$. For instance, $c$ may simply charge a constant amount for each variable used in the associated submodel, or may be proportional to a graph property such as tree width of the corresponding graphical model. Given a set $\mathcal{P}$ of approximations, we can then ask for the \emph{resource-optimal} approximation  in either of the above two senses. For instance, with KL-divergence the distributions of interest include any $\tilde{P}$ that optimally trades off cost against KL-distance from the true distribution $P$: 
 %
 \begin{equation} \tilde{P} \;\;= \;\; \underset{P^*\in\mathcal{P}}{\textnormal{argmin}} \; KL(P\;||\;P^*) + c(P^*)\;.\label{optimal}\end{equation}
 %
 Notice the immediate result that any node $X$ that is screened-off from $\textbf{X}_q$ by $\textbf{X}_e$ should be eliminated: doing so will not reduce the KL, but will improve the efficiency of inference.
 
-In what follows we illustrate these ideas with three examples using familiar graphical models. The first example, of an HMM, demonstrates an extreme case of the frame problem in which the initial model is infinite. In this case we show that the resource-optimal submodel is not only finite, but often quite small, and in many instances includes just a single node. The second example, of a causal Bayes net, shows that under a sampling scheme for decision making, the submodel actually outperforms the ``ideal'' full model in many cases, even without taking costs into account. Finally, the third example, also involving small Bayes nets, reveals that certain kinds of inferences may be subject to greater information loss resulting from resource-rational neglect than others. Recent empirical literature shows that people respect this difference, suggesting that there may indeed be an element of resource rationality in alternative neglect behavior.
+In what follows we illustrate these ideas with three examples using familiar graphical models. The first example, of an HMM, demonstrates an extreme case of the frame problem in which the initial model is infinite. We show that the resource-optimal submodel is not only finite, but often quite small, and in many instances includes just a single node. The second example, of a causal Bayes net, shows that under a sampling scheme for decision making, the submodel actually outperforms the ``ideal'' full model in many cases, even without taking costs into account. Finally, the third example  reveals that certain kinds of inferences may be subject to greater information loss resulting from neglect than others. Recent empirical literature shows that people respect this difference, suggesting that there may indeed be an element of resource rationality in alternative neglect behavior.
 
 %\red{
 %long:another point: it would be worth pointing out, maybe early on in the paper, the transparent case where you can ignore nodes downstream from all evidence and queries. e.g., if my graphical model is A -> B -> C and I'm interested in P(A | B), i can ignore C.
@@ -140,39 +140,39 @@ with transition probability $P(X_{t+1}\mid X_t)$, and a sequence of evidence var
  \end{tikzpicture}
 \end{center} 
 \end{figure} 
-\noindent For instance, variables $X$ might be whether there is high or low air pressure, while observations $Y$ are of sun or clouds. While in principle determining $X_{0}$---what the weather will be like today---could depend on indefinitely earlier observations and states at times $t=-1,-2,\dots$, one has the intuition that ``looking back'' only a few days should be sufficient for typical purposes.
+\noindent For instance, variables $X$ might be whether there is high or low air pressure, while observations $Y$ are of sun or clouds. While in principle determining $X_{0}$---today's weather---could depend on indefinitely earlier observations and states at times $t=-1,-2,\dots$, one has the intuition that ``looking back'' only a few days should be sufficient for typical purposes.
 
 For a first illustration, consider a simple HMM with binary variables $X_t$ and $Y_t$, and probabilities as follows:
 $$P(X_{t+1}=1\mid X_t=1) = P(X_{t+1}=0\mid X_t=0) = 0.9$$
 $$P(Y_{t}=1\mid X_t=1) = P(Y_{t}=0\mid X_t=0) = 0.8$$
 Our class $\mathcal{P}$ of approximate distributions includes all truncations of the model at variable $X_{t-N}$, in which case we assume the distribution $P^{*}(X_{t-N})$ is uniform. In Figure \ref{hmm}1 is a graph showing the KL-distance between the full model and a submodel with only $N$ previous time steps included.
  \begin{figure}[h]  \begin{center}
-\includegraphics[scale=0.3]{hmm1.pdf} \caption{Dropoff in KL as function of number of nodes.} \end{center} 
+\includegraphics[scale=0.29]{hmm1.pdf} \caption{Dropoff in KL as function of number of nodes.} \end{center} 
 \label{hmm}\end{figure} 
-We chose this particular model for illustration because the KL-distance is relatively high for the submodel with only one node. Nonetheless, even for this model, the value drops off rather dramatically with only a few additional nodes. This model has a low mixing rate, as measured by the second eigenvalue ($\lambda_2$) of the transition matrix for the underlying Markov model (the transition probabilities). In general, a higher $\lambda_2$ value means a lower mixing rate, which means the past provides more information about the present. One might expect that in such cases it is more detrimental to ignore previous state variables. If we look at the graph (Figure \ref{kl-eigen}2) of KL-distances as a function of $\lambda_2$, holding fixed the observation probabilities as above, we see that this model (for which $\lambda_2 = 0.8$) is indeed near the higher end.
+We chose this particular model for illustration because the KL-distance is relatively high for the submodel with only one node. Nonetheless, even for this model, the value drops off rather dramatically with only a few additional nodes.
+
+This model has a low mixing rate, as measured by the second eigenvalue ($\lambda_2$) of the transition matrix for the underlying Markov model (the transition probabilities). In general, a higher $\lambda_2$ value means a lower mixing rate, which means the past provides more information about the present. One might expect that in such cases it is more detrimental to ignore previous state variables. If we look at the graph (Figure \ref{kl-eigen}2) of KL-distances as a function of $\lambda_2$, holding fixed the observation probabilities as above, we see that this model (for which $\lambda_2 = 0.8$) is indeed near the higher end.
 
  \begin{figure}[h]  \begin{center}
  \label{kl-eigen}
-\includegraphics[scale=0.33]{kl-eigenvalue-5.pdf} \caption{KL-distance for an approximate model with only one state variable, as a function of second eigenvalue $\lambda_2$.} \end{center} 
+\includegraphics[scale=0.3]{kl-eigenvalue-5.pdf} \caption{KL-distance for an approximate model with only one state variable, as a function of second eigenvalue $\lambda_2$.} \end{center} 
 \end{figure}
 
-If we now factor in the cost of including more nodes in the approximate HMM, we can determine for different values of $\lambda_2$, and for different assumptions about cost of a node, what the optimal number of nodes to include will be, in line with the Equation (\ref{optimal}) above. To give one (arbitrary, but illustrative) example, we assume the cost of an additional node to be $0.02$, i.e., that this cost is equivalent to the utility of $\frac{1}{50}$ more bits of information.%\footnote{Recall that KL measures the average number of additional bits required to code samples from $P*$ with an optimal code for $P$.}
-
+If we now factor in the cost of including more nodes in the approximate HMM, we can determine, for different values of $\lambda_2$, and for different assumptions about cost of a node, what the optimal number of nodes to include will be, in line with Equation (\ref{optimal}) above. To give one (arbitrary, but illustrative) example, let us assume the cost of an additional node to be $0.02$, i.e., that this cost is equivalent to the utility of $\frac{1}{50}$ more bits of information.%\footnote{Recall that KL measures the average number of additional bits required to code samples from $P*$ with an optimal code for $P$.}
  \begin{figure}[h]  \begin{center}
-\includegraphics[scale=0.33]{kl-eigenvalue-7.pdf} \caption{Optimal number of nodes, given a cost of $0.02$ per node, as a function of second eigenvalue $\lambda_2$.} \end{center} 
+\includegraphics[scale=0.3]{kl-eigenvalue-7.pdf} \caption{Optimal number of nodes, given a cost of $0.02$ per node, as a function of second eigenvalue $\lambda_2$.} \end{center} 
 \label{kl-eigen1}\end{figure}
-
-\noindent For relatively low values of $\lambda_2$, it is not worth the cost to include more than a single state variable in the model (see Fig. \ref{kl-eigen1}3). This is perhaps not surprising, given the low KL-values in Fig. \ref{kl-eigen}2. However, even in models with significantly higher KL-distances in general, it does not pay to include more than one or two additional nodes. %Note in particular that, while a model with $\lambda_2=0.8$ is further from the true model than one with $\lambda_2=0.7$, only in the latter case does the marginal difference in KL-value between including two and three nodes merit the cost of including the third node. 
+For relatively low values of $\lambda_2$, it is not worth the cost to include more than a single state variable in the model (see Fig. \ref{kl-eigen1}3). This is perhaps not surprising, given the low KL-values in Fig. \ref{kl-eigen}2. However, even in models with significantly higher KL-distances in general, it does not pay to include more than one or two additional nodes. %Note in particular that, while a model with $\lambda_2=0.8$ is further from the true model than one with $\lambda_2=0.7$, only in the latter case does the marginal difference in KL-value between including two and three nodes merit the cost of including the third node. 
 %\red{is it weird that is wiggles at the end?}
 %TFI: It does seem to wiggle for various parameter settings, but I changed the parameters (so that observation probs are 0.8, not 0.9), which gave a nicer(?) graph.
-As we increase or decrease the cost $c$ of a node, this graph becomes less flat and flatter, respectively. For instance, as long as $c>0.148$, the optimal number is 1 for all these values of $\lambda_2$. Decreasing the cost would increase the optimal number for larger values of $\lambda_2$, but for any $c>0$ this number is of course still finite.
+As we increase or decrease the cost $c$ of a node, the graph becomes less flat and flatter, respectively. For instance, provided that $c>0.148$, the optimal number is 1 for all these values of $\lambda_2 = 0.1,\dots,0.9$. Decreasing the cost would increase the optimal number for larger values of $\lambda_2$, but for any $c>0$ this number is of course still finite.
 
-As Fig. \ref{kl-eigen1}3 indicates, the optimal number of nodes to include in an HMM is not only finite, but can typically be quite small.
+As Fig. \ref{kl-eigen1}3 indicates, the optimal number of nodes to include in an HMM is not only finite, but can typically be quite small, in line with ordinary intuition.
 
 \section{Neglecting Alternative Causes}
 
 We next consider a simple causal model under a so called Noisy-Or parameterization \citep{Cheng}, in which each cause has independent causal power to bring about the effect. Suppose we have binary causal variables $\textbf{X}$, taking on values 0 or 1, and conditional probabilities given in terms of weights $\theta_{Y,X}$ codifying the influence of parent $Y$ on a variable $X$---in particular $\theta_{Y,X}$ gives the probability of $Y$ causing $X$ when $Y$ is active---and a ``background bias'' parameter $\beta$: $$P\big(X\mid \textbf{pa}(X)\big) \quad = \quad 1-\Big((1-\beta)\prod_{Y \in \textbf{pa}(X)} (1-\theta_{Y,X})^Y\Big)$$
-This model has the convenient property that deleting nodes from the graph still leaves us with a well-defined distribution. Hence the family of sub-models is immediate from the full model (without having to introduce a proxy uniform distribution as in the previous example).
+This model has the convenient property that deleting nodes from the graph still leaves us with a well-defined distribution. Hence the family of submodels is immediate from the full model (without having to introduce a proxy uniform distribution as in the previous example).
 
 Suppose in particular we have variables $A,B,C,D$ with weights $\theta_1, \theta_2$, and $\theta_3$, as depicted on the left in Figure \ref{noisy-or}.
 \begin{figure}[h] 
@@ -234,7 +234,7 @@ Suppose in particular we have variables $A,B,C,D$ with weights $\theta_1, \theta
 \item[] $A$: ``Mary has lost her usual gloves'' \item[] $B$: ``Mary has her bicycle with her''  \item[] $C$: ``Mary is going cycling"  \item[] $D$:  ``Mary is wearing cycling gloves'' \end{itemize}
 Observing that Mary is wearing cycling gloves makes it more likely that she is going cycling, and therefore that she has her bike with her. But this is attenuated by the alternative possible cause, that she lost her other gloves. Our question in this case is, how much worse will a reasoner fare by ignoring alternative cause $A$ (that Mary has lost her gloves), that is, by using the smaller submodel  in Figure \ref{noisy-or}, on the right?
 
-To assess this question, we can look at both the difference in expected utility and the KL-divergence between using the ``true'' distribution $P$ and the approximate distribution $P^*$, for $B$ given $D=1$. Table \ref{table1} below presents example KL-values for different settings of model parameters (here and throughout this subsection, we set $\beta = 0.05$).
+To assess this question, we can look at both the difference in expected utility and the KL-divergence between using the ``true'' distribution $P$ and the approximate distribution $P^*$, for $B$ given $D=1$. Table \ref{table1} below presents example KL-values for different settings of model parameters: the priors on $C$ and $A$, and the three weights $\theta_1,\theta_2,$ and $\theta_3$ (here and throughout this subsection, we set $\beta = 0.05$).
 
 \begin{table}[h]  \begin{center}
 \begin{tabular}{c | c | c | c | c || c}
@@ -249,7 +249,7 @@ To assess this question, we can look at both the difference in expected utility 
  $0.5$ & $0.5$ & $0.1$ & $0.1$ & $0.1$ & $0.000$ 
 \end{tabular} \end{center} \caption{Example KL-values, with $\beta = 0.05$.} \label{table1}
 \end{table}
-Table \ref{table1} in fact shows settings near the higher end. We can also calculate the approximate \emph{average} KL-divergence, over values of $P(C)$ and $P(A)$ at $0.1$ intervals ($0.1$, $0.2$, etc.), and $0.01$ intervals for $\theta_1,\theta_2,\theta_3$ (thus, over 7 million parameter settings): for this model, it is $0.060$. Averaging over parameters with $P(A)$ and $P(C)$ fixed at $0.5$ gives a similar value of $0.059$.
+Table \ref{table1} in fact shows settings near the higher end. We can also calculate the approximate \emph{average} KL-divergence, over values of $P(C)$ and $P(A)$ at $0.1$ intervals ($0.1$, $0.2$, etc.), and $0.01$ intervals for $\theta_1,\theta_2,\theta_3$ (thus, over 7 million parameter settings): for this model, it is $0.060$. Averaging over parameters with $P(A)$ and $P(C)$ fixed at $0.5$ gives a similar average KL-divergence of $0.059$.
 Thus, the KL-value is typically well under one-tenth of a bit of information lost.
 Nonetheless, if confidence in estimation is important, or if very fine-grained decisions are called for, using the submodel may be detrimental in this case. 
 
@@ -270,7 +270,7 @@ For the EU calculation, suppose our agent is making a guess based on a single sa
 \end{tabular} \end{center} \caption{Example EU-values, with $\beta = 0.05$.} \label{table2}
 \end{table}
 %
-As with KL, we can also compute the (approximate) average difference in EU, which for this model is $0.024$. That is, on average over all parameter settings, a sampling agent will only suffer about $\frac{1}{50}$ of a utile by using the simpler submodel.
+As with KL, we can also compute the (approximate) average difference in EU, which for this model is $0.024$. That is, on average over all parameter settings, a sampling agent will only suffer about $\frac{1}{50}$ of a utile by using the simpler submodel. The cost of including the additional variable $A$ would therefore need to be extremely low, relative to utility in the given decision problem, to merit its presence in the model.
 
 Evidently, when making a binary, sample-based decision, using the smaller submodel does not greatly reduce one's success probability. In fact, as shown in Table \ref{table1}, for many parameter settings the agent actually fares better by using the simpler model ($\Delta_{P,P*}<0$). Take the first parameter setting, for example. In this case $P(B=1\mid D=1) \approx 0.673$, whereas $P^*(B=1 \mid D=1) \approx 0.955$. The submodel drastically overestimates the probability of $B$ by ignoring the alternative cause, as reflected in the very high KL-value in Table \ref{table1}. However, insofar as the true probability is significantly above $0.5$, if the subject is going to make a decision by drawing a single sample from this distribution, such overestimation turns out to be advantageous, since the subject is more likely to choose the more probable outcome. Such advantages would only be compounded by the reduction in computational cost resulting from the simpler model.
 
@@ -328,8 +328,8 @@ The finding in \cite{Fernbach2011} is that subjects routinely ignore variable $A
 In other words, subjects seem to be reasoning with a submodel (ignoring variable $A$) in the predictive case, but not in the diagnostic case. How detrimental would it be to neglect $A$ for these two types of inference? Consider first KL-divergence (question 2). Without a background bias term (as in the previous example), for the diagnostic case ignoring variable $A$ will lead to the conclusion that $C$ has probability 1, since it is the only possible cause. In that case, the KL-divergence is infinite. With a positive bias term $\beta$, we can make the KL-divergence finite, but it will still be large if the bias is small. For instance, with 1\% chance of B happening spontaneously ($\beta = 0.01$), the average value of $KL(P\;||\;P^*)$ for the diagnostic inference is already $1.740$, extremely high. With $\beta=0.05$, it is $0.916$.
 
 By contrast, the average value of $KL(P\;||\;P^*)$ in the predictive case (even without a bias term, which would further decrease the average KL value) is only $0.357$.  
-This is a general observation about this small causal graph, which is the one implicated in many studies of ``elemental causal induction''. 
-While it may be difficult to assess these KL-values absolutely, we can confirm that there is a substantial difference between the two types of inference. Indeed, on average one can expect to make much worse predictions in the diagnostic case than in the predictive case; an agent balancing computation cost with accuracy would then be expected to neglect the alternative more in predictive than diagnostic reasoning.
+This is a general observation about this particular small causal graph, which is the one implicated in many studies of ``elemental causal induction.'' 
+While it may be difficult to assess these KL-values absolutely, we can confirm that there is a substantial difference between the two types of inference. Indeed, on average one can expect to make much worse predictions in the diagnostic case than in the predictive case; an agent balancing computation cost with accuracy would then be expected to neglect the alternative more in predictive reasoning than in diagnostic reasoning.
 
 How does this look from the perspective of expected utility, again assuming a single-sample-based agent?  Table \ref{predictive} shows the differences in expected utility for several parameter settings between the EU of using the true distribution and the approximate distribution (ignoring variable $A$), for both the predictive and diagnostic cases. 
 \begin{table}[h]  \begin{center}
@@ -346,11 +346,11 @@ How does this look from the perspective of expected utility, again assuming a si
 In some cases, $\Delta_{pred}$ is indeed smaller than $\Delta_{diag}$, meaning that the agent suffers less in expected utility when using the smaller submodel. However, there are also cases where $\Delta_{pred}$ is greater than $\Delta_{diag}$. Indeed, the average $\Delta_{pred}$ value, over $0.01$ intervals for all parameters, is $0.198$---relatively large, and significantly greater than $\Delta_{diag}$, whose average is $0.044$. Again, this means that a subject drawing a single sample will on average lose about $\frac{1}{5}$ of a utile for predictive inferences on this graph, versus only about $\frac{1}{25}$ for diagnostic inferences.
 
 This is in sharp contrast to an agent that decides based on exact inference (or equivalently, based on many samples).
-Indeed, based on the earlier results for KL-distance, we can compare action selection directly for agents that accurately maximize expected utility from the full- or sub-model.
-It turns out that for such agents the average difference in EU over all parameter settings is indeed significantly greater in the diagnostic case ($0.378$, versus $0.174$ in the predictive case).
-If resource rationality is the correct explanation of these cases of alternative neglect, we would then have to conclude that participants are not using a single sample but rather many (or some other algorithm for computing the exact probabilities).
+Based on the earlier results for KL-distance, we can compare action selection directly for agents that accurately maximize expected utility from the full- or sub-model.
+It turns out that for such agents the average difference in expected utility over all parameter settings is indeed significantly greater in the diagnostic case ($0.378$, versus $0.174$ in the predictive case).
+If resource rationality is the correct explanation of these cases of alternative neglect, we would then have to conclude that participants are not using a single sample but rather many (or more generally are using some algorithm for computing closer approximations to the exact probabilities).
 Indeed, the models in Fig. \ref{diagnostic} are rather simple and one might expect that inference for these models is relatively easy.
-At any rate, positing that one can well-approximate the true probability for a given model, if one were to ignore causal variables in one case but not the other, it would be most rational to do so in the predictive case, as subjects in fact do. 
+At any rate, positing that one can well-approximate the true probability for a given model, if one were to ignore causal variables routinely in one type of case (diagnostic or predictive) but not the other, it would be most rational to do so in the predictive case, as subjects in fact do. 
 
 %If we take resource rationality as a working methodological hypothesis, we might conclude that for this particular graphical model, subjects are not typically making decisions based on a single sample. To be sure, the models in Fig. \ref{diagnostic} are rather simple, and one might expect that, once such a model (or submodel thereof) is considered, a subject will have little difficulty maximizing simple expectations (e.g., of utility) over this distribution, by drawing further samples, or by some other algorithmic method (cf. Fn. \ref{fn}). 
 % suggesting again that, if one were to ignore causal variables in one case but not the other, it would seem to be most rational to do so in the predictive case, as subjects in fact do. 
@@ -366,16 +366,16 @@ As we have seen, this approach to the causal frame problem does already shed lig
 The claim we would like to make is that, somehow or other, the mind is able to focus attention on the predicted submodels for the task at hand. 
 Our analysis, however, is from a ``god's eye'' point of view, and leaves open how is the mind able to select the right submodel online, at inference time.
 %
-There is relevant empirical work which might start to provide an process-level explanation of submodel selection. For example, subjects seem to ``add'' a new causal variable when faced with an apparent contradiction \cite{Park}.
+There is relevant empirical work which might start to provide a process-level explanation of submodel selection. For example, across many situations subjects seem to ``add'' a new causal variable when faced with an apparent contradiction \citep{Park}.
 % (see, e.g., the \emph{contradiction hypothesis} of \citealt{Park}). 
 %We might try to understand the (resource-)rational basis of different algorithms for selecting a causal model with which to reason. As with other instances of rational analysis, this could then be used to focus attention on promising hypotheses for how the mind actually achieves this higher-order task. The framework in this paper is an important start on this question, insofar as the target of any such mechanism will be to identify submodels that are rational in exactly our ``god's eye'' sense.
-At the same time, work in AI suggests useful heuristics for similar resource optimization problems \cite[e.g.][]{WickMcCallum}.
+At the same time, work in AI suggests useful heuristics for similar resource optimization problems \cite[e.g.,][]{WickMcCallum}.
 
 
 A number of extensions to our analysis suggest themselves. 
-One could consider other types of submodels: e.g., not by eliminating nodes, but by cutting links.
+One could consider other types of submodels, e.g., not by eliminating nodes, but by cutting links.
 One could also consider more seriously the interaction of submodel choice with inference algorithm choice. 
-As we hinted at in the previous section, it would be useful to consider what the optimal \emph{combination} of submodel together with number of samples will be for a given model (thus combining the analysis here with that in \citealt{Vul2014}). Assuming smaller submodels will allow for more samples per unit of time (or energy), and given that more samples lead to more accurate predictions with respect to that model, there is a substantive question of what combination is optimal in any case.
+As hinted in the previous section, it would be useful to consider what the optimal \emph{combination} of submodel together with number of samples will be for a given model (thus combining the analysis here with that in \citealt{Vul2014}). Assuming smaller submodels will allow for more samples per unit of time (or energy), and given that more samples lead to more accurate predictions with respect to that model, there is a substantive question of what combination is optimal in any case.
 
 %
 %There are also further ways we might compare causal models with respect to resource-efficiency. We studied mainly optimal number of nodes, from the perspective of KL-divergence, average utility for a sampling agent, and in the last case average utility for an expected utility maximizer. One could also consider other types of submodels, not by eliminating nodes, but, e.g., by cutting links.
@@ -385,8 +385,8 @@ As we hinted at in the previous section, it would be useful to consider what the
 %One might also consider the same questions with respect to an agent using some specific algorithmic inference strategy, such as Markov Chain Monte Carlo or belief propagation (see \citealt{Griffiths2014} for discussion of MCMC is resource-rational psychological model, and \citealt{WickMcCallum} for work in AI of a similar spirit on ``query-aware'' MCMC). That is, given an agent that is using a specific inference strategy, what would be the optimal submodel for that strategy. This too can be combined into one optimization question: which model and what use of this strategy (e.g., how long of a burn-in) together give the best results?
 
 %To repeat, the precise level of grain at which the mind does efficiently solve this problem remains an open question. 
-While many questions remain open, we hope to have made some progress toward illuminating the solution to the causal frame problem. 
-We believe the question is central to human reasoning. As Fodor remarked, ``The frame problem goes very deep; it goes as deep as the analysis of rationality" \citeyearpar{Fodor1987}.
+While many questions remain open, we hope to have made some progress toward illuminating a general solution to the causal frame problem. 
+We believe the question is central to our understanding of human reasoning. As Fodor remarked, ``The frame problem goes very deep; it goes as deep as the analysis of rationality" \citep{Fodor1987}.
 
 %NDG: should do joint optimization of samples and submodel.
 %TFI: Yes!
